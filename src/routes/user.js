@@ -16,15 +16,32 @@ server.post("/", (req, res, next) => {
           password: hash,
           role: role,
         };
-        User.create(newUser)
+        User.findAll()
           .then((users) => {
-            res.status(201);
-            res.send(users.dataValues);
+            if (users && users.length === 0) {
+              newUser.role = "admin";
+              User.create(newUser)
+                .then((users) => {
+                  res.status(201);
+                  return res.send(users.dataValues);
+                })
+                .catch((error) => {
+                  res.status(400);
+                  return res.send(error);
+                });
+            }
+            User.create(newUser)
+                .then((users) => {
+                  res.status(201);
+                  return res.send(users.dataValues);
+                })
+                .catch((error) => {
+                  res.status(400);
+                  return res.send(error);
+                });
           })
-          .catch((error) => {
-            res.status(400);
-            res.send(error);
-          });
+          .catch((error) => next(error));
+
       });
     });
   } else {

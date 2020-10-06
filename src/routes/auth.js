@@ -26,7 +26,7 @@ server.post(
 );
 
 server.get("/login", function (req, res) {
-  res.status(401).send("Fallo el inicio de sesion");
+  res.status(401).send({ message: "Fallo el inicio de sesion" });
 });
 
 server.get("/logout", function (req, res) {

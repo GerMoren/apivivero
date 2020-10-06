@@ -88,8 +88,8 @@ const server = express();
 server.name = "API";
 server.use(
   cors({
-    origin: "http://localhost:3001",
-    credentials: true,
+//     origin: "http://localhost:3001",
+//     credentials: true,
   })
 );
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));

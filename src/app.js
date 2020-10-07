@@ -97,24 +97,20 @@ server.use((req, res, next) => {
 server.use(
   session({
     secret: "clasificado",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
   })
 );
 
 server.use(passport.initialize());
 server.use(passport.session());
-server.use((req, res, next) => {
-  next();
-});
-server.use("/", routes);
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
 passport.deserializeUser(function (id, done) {
-  User.findById({ where: { id: id } })
+  User.findById(id)
     .then((user) => {
       done(null, user);
     })
@@ -123,16 +119,21 @@ passport.deserializeUser(function (id, done) {
     });
 });
 
+server.use((req, res, next) => {
+  next();
+});
+server.use("/", routes);
+
 function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.send("no logeado");
+    res.send(req.isAuthenticated());
   }
 }
 
 server.get("/me", isAuthenticated, function (req, res) {
-  User.findById({ where: { id: req.user.id }, include: [Order] })
+  User.findById(req.user.id, { include: [Order] })
     .then((user) => {
       res.send(user);
     })

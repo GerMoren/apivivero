@@ -11,6 +11,7 @@ server.post(
     let { email } = req.body;
     Toresetpassword.findOne({ where: { email: email } }).then((user) => {
       if (!user) {
+        console.log("en el post del login", req.user);
         res.status(200).send({
           id: req.user.id,
           role: req.user.role,
@@ -22,11 +23,11 @@ server.post(
         res.json({ message: "Necesitas cambiar tu password." });
       }
     });
-    res.json(req.user);
   }
 );
 
 server.get("/login", function (req, res) {
+  console.log("estoy en el get de login");
   res.status(401).send({ message: "Fallo el inicio de sesion" });
 });
 
@@ -50,6 +51,7 @@ server.get("/logout", function (req, res) {
       return next(err);
     }
     // The response should indicate that the user is no longer authenticated.
+    console.log(req.isAuthenticated);
     return res.send({ authenticated: req.isAuthenticated() });
   });
   // req.session.destroy((err) => {

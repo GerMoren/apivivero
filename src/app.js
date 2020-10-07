@@ -157,6 +157,7 @@ function isAuthenticated(req, res, next) {
 }
 
 server.get("/me", isAuthenticated, function (req, res) {
+  console.log("dentro del /me", req.user);
   User.findOne({ where: req.user.id }, { include: [Order] })
     .then((user) => {
       res.send(user);

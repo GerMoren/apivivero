@@ -100,7 +100,6 @@ server.use(morgan("dev"));
 server.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin",
              "https://vivero.vercel.app",
-//              "http://localhost:3001"
             ); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
@@ -161,8 +160,8 @@ server.get(
 server.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:3001/catalogo",
-    failureRedirect: "http://localhost:3001/loginpage",
+    successRedirect: "https://vivero.vercel.app/catalogo",
+    failureRedirect: "https://vivero.vercel.app/loginpage",
   })
 );
 

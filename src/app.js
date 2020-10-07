@@ -101,12 +101,6 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 server.use((req, res, next) => {
-  console.log(req.session);
-  console.log(req.user);
-  next();
-});
-
-server.use((req, res, next) => {
   // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Origin", "https://vivero.vercel.app");
   res.header("Access-Control-Allow-Credentials", "true");
@@ -141,6 +135,12 @@ passport.deserializeUser(function (id, done) {
     .catch((err) => {
       return done(err);
     });
+});
+
+server.use((req, res, next) => {
+  // console.log(req.session);
+  console.log(req.user);
+  next();
 });
 
 server.use("/", routes);

@@ -133,7 +133,7 @@ function isAuthenticated(req, res, next) {
 }
 
 server.get("/me", isAuthenticated, function (req, res) {
-  User.findById(req.user.id, { include: [Order] })
+  User.findOne({ where: req.user.id }, { include: [Order] })
     .then((user) => {
       res.send(user);
     })

@@ -88,7 +88,7 @@ const server = express();
 server.name = "API";
 server.use(
   cors({
-//     origin: "http://localhost:3000",
+    origin: "*",
     credentials: true,
   })
 );
@@ -99,6 +99,7 @@ server.use(morgan("dev"));
 // server.use(googleStratergy);
 server.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin",
+             "*",
 //              "http://localhost:3001"
             ); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Credentials", "true");

@@ -1,7 +1,7 @@
 const server = require("express").Router();
 const session = require("express-session");
 const passport = require("passport");
-const { User, Toresetpassword } = require("../db.js");
+const { User, Toresetpassword, Order } = require("../db.js");
 const { Sequelize } = require("sequelize");
 
 server.post(
@@ -11,7 +11,7 @@ server.post(
     let { email } = req.body;
     Toresetpassword.findOne({ where: { email: email } }).then((user) => {
       if (!user) {
-        console.log("en el post del login", req.user);
+        // console.log("en el post del login", req.user);
         res.status(200).send({
           id: req.user.id,
           role: req.user.role,
@@ -27,7 +27,7 @@ server.post(
 );
 
 server.get("/login", function (req, res) {
-  console.log("estoy en el get de login");
+  // console.log("estoy en el get de login");
   res.status(401).send({ message: "Fallo el inicio de sesion" });
 });
 

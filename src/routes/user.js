@@ -67,7 +67,7 @@ server.put("/:id", (req, res, next) => {
 });
 
 server.get("/:id", (req, res, next) => {
-  User.findById({
+  User.findByPk({
     where: { id: req.params.id },
     include: [Order, Reviews],
   })

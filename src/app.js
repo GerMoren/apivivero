@@ -76,7 +76,7 @@ passport.use(
 // lo más simple y pequeña posible
 
 passport.serializeUser(function (user, done) {
-  console.log("en el serialize", user);
+  console.log("en el serialize", user.id);
   done(null, user.id);
 });
 

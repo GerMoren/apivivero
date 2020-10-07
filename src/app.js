@@ -97,8 +97,8 @@ server.use((req, res, next) => {
 server.use(
   session({
     secret: "clasificado",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
   })
 );
 
@@ -110,7 +110,7 @@ server.use((req, res, next) => {
 server.use("/", routes);
 
 passport.serializeUser(function (user, done) {
-  done(null, user._id);
+  done(null, user.id);
 });
 
 passport.deserializeUser(function (id, done) {
@@ -132,7 +132,7 @@ function isAuthenticated(req, res, next) {
 }
 
 server.get("/me", isAuthenticated, function (req, res) {
-  User.findById({ where: { id: req.user._id }, include: [Order] })
+  User.findById({ where: { id: req.user.id }, include: [Order] })
     .then((user) => {
       res.send(user);
     })

@@ -88,7 +88,7 @@ const server = express();
 server.name = "API";
 server.use(
   cors({
-//     origin: "*",
+    origin: "",
     credentials: true,
   })
 );

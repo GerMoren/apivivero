@@ -110,7 +110,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-  User.findById(id)
+  User.findByPk(id)
     .then((user) => {
       done(null, user);
     })

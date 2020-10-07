@@ -126,16 +126,16 @@ server.use((req, res, next) => {
 server.use("/", routes);
 
 function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
+//   if (req.isAuthenticated()) {
     next();
-  } else {
-    res.send("no logeado");
-  }
+//   } else {
+//     res.send("no logeado");
+//   }
 }
 
 server.get("/me",
-//            isAuthenticated,
-           true,
+           isAuthenticated,
+//            true,
            function (req, res) {
   User.findOne({ where: { id: req.user.id }, include: [Order] })
     .then((user) => {

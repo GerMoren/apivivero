@@ -148,40 +148,4 @@ server.use((err, req, res, next) => {
   res.status(status).send(message);
 });
 
-function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.send(req.isAuthenticated());
-  }
-}
-
-server.get("/me", isAuthenticated, function (req, res) {
-  console.log("dentro del /me", req.user);
-  User.findOne({ where: req.user.id }, { include: [Order] })
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      res.send("no se encontro el usuario");
-    });
-});
-
-server.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile", "openid"] }),
-  function (req, res) {
-    console.log("inicio de sesion exitoso");
-    res.json(req.user);
-  }
-);
-
-server.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "https://vivero.vercel.app/catalogo",
-    failureRedirect: "https://vivero.vercel.app/loginpage",
-  })
-);
-
 module.exports = server;

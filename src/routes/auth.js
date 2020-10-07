@@ -51,7 +51,7 @@ server.get("/logout", function (req, res) {
       return next(err);
     }
     // The response should indicate that the user is no longer authenticated.
-    console.log(req.isAuthenticated);
+    console.log(req.isAuthenticated());
     return res.send({ authenticated: req.isAuthenticated() });
   });
   // req.session.destroy((err) => {
@@ -67,5 +67,41 @@ server.get("/logout", function (req, res) {
   // res.clearCookie("connect.sid");
   // res.redirect("/");
 });
+
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.send(req.isAuthenticated());
+  }
+}
+
+server.get("/me", isAuthenticated, function (req, res) {
+  console.log("dentro del /me", req.user);
+  User.findOne({ where: req.user.id }, { include: [Order] })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.send("no se encontro el usuario");
+    });
+});
+
+server.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile", "openid"] }),
+  function (req, res) {
+    console.log("inicio de sesion exitoso");
+    res.json(req.user);
+  }
+);
+
+server.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "https://vivero.vercel.app/catalogo",
+    failureRedirect: "https://vivero.vercel.app/loginpage",
+  })
+);
 
 module.exports = server;

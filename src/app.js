@@ -15,27 +15,29 @@ require("./db.js");
 const { User, Review, Order, Products_Order } = require("./db.js");
 
 passport.use(
-  new Strategy({ usernameField: "email", passwordField: "password" }, function (
-    username,
-    password,
-    done
-  ) {
-    User.findOne({ where: { email: username } })
-      .then((user) => {
-        if (!user) {
-          return done(null, false);
-        }
-        bcrypt.compare(password, user.password).then((res) => {
-          if (res) {
-            return done(null, user);
+  new Strategy(
+    {
+      usernameField: "email",
+      //  passwordField: "password"
+    },
+    function (username, password, done) {
+      User.findOne({ where: { email: username } })
+        .then((user) => {
+          if (!user) {
+            return done(null, false);
           }
-          return done(null, false);
+          bcrypt.compare(password, user.password).then((res) => {
+            if (res) {
+              return done(null, user);
+            }
+            return done(null, false);
+          });
+        })
+        .catch((err) => {
+          return done(err);
         });
-      })
-      .catch((err) => {
-        return done(err);
-      });
-  })
+    }
+  )
 );
 
 passport.use(
@@ -66,31 +68,6 @@ passport.use(
     }
   )
 );
-
-// Configuración de la persistencia de la sesión autenticada
-
-// Para recuperar los datos de la sesión autenticada Passport necesita dos métodos para
-// serializar y deserializar al usuario de la sesión. Para ello la forma más práctica de hacerlo
-// es serializando el ID del usuario para luego al deserealizar a partir de dicho ID obtener
-// los demás datos de ese usuario. Esto permite que la información almacenada en la sesión sea
-// lo más simple y pequeña posible
-
-passport.serializeUser(function (user, done) {
-  console.log("en el serialize", user.id);
-  done(null, user.id);
-});
-
-// Al deserealizar la información del usuario va a quedar almacenada en req.user
-passport.deserializeUser(function (id, done) {
-  console.log("en el deserialize", id);
-  User.findByPk(id)
-    .then((user) => {
-      done(null, user);
-    })
-    .catch((err) => {
-      return done(err);
-    });
-});
 
 const server = express();
 //Middlewares
@@ -137,6 +114,31 @@ server.use((req, res, next) => {
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
   next();
+});
+
+// Configuración de la persistencia de la sesión autenticada
+
+// Para recuperar los datos de la sesión autenticada Passport necesita dos métodos para
+// serializar y deserializar al usuario de la sesión. Para ello la forma más práctica de hacerlo
+// es serializando el ID del usuario para luego al deserealizar a partir de dicho ID obtener
+// los demás datos de ese usuario. Esto permite que la información almacenada en la sesión sea
+// lo más simple y pequeña posible
+
+passport.serializeUser(function (user, done) {
+  console.log("en el serialize", user.id);
+  done(null, user.id);
+});
+
+// Al deserealizar la información del usuario va a quedar almacenada en req.user
+passport.deserializeUser(function (id, done) {
+  console.log("en el deserialize", id);
+  User.findByPk(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((err) => {
+      return done(err);
+    });
 });
 
 server.use("/", routes);

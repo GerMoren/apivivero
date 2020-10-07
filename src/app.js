@@ -67,20 +67,6 @@ passport.use(
   )
 );
 
-passport.serializeUser(function (user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function (id, done) {
-  User.findOne({ where: { id: id } })
-    .then((user) => {
-      done(null, user);
-    })
-    .catch((err) => {
-      return done(err);
-    });
-});
-
 const server = express();
 //Middlewares
 //Usamos el modulo cors para las politics cors
@@ -98,9 +84,7 @@ server.use(cookieParser());
 server.use(morgan("dev"));
 // server.use(googleStratergy);
 server.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin",
-             "https://vivero.vercel.app",
-            ); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", "https://vivero.vercel.app"); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
@@ -125,19 +109,30 @@ server.use((req, res, next) => {
 });
 server.use("/", routes);
 
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findById({ where: { id: id } })
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((err) => {
+      return done(err);
+    });
+});
+
 function isAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     next();
-//   } else {
-//     res.send("no logeado");
-//   }
+  } else {
+    res.send("no logeado");
+  }
 }
 
-server.get("/me",
-           isAuthenticated,
-//            true,
-           function (req, res) {
-  User.findOne({ where: { id: req.user.id }, include: [Order] })
+server.get("/me", isAuthenticated, function (req, res) {
+  User.findById({ where: { id: req.user.id }, include: [Order] })
     .then((user) => {
       res.send(user);
     })

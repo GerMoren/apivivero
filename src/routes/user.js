@@ -31,17 +31,16 @@ server.post("/", (req, res, next) => {
                 });
             }
             User.create(newUser)
-                .then((users) => {
-                  res.status(201);
-                  return res.send(users.dataValues);
-                })
-                .catch((error) => {
-                  res.status(400);
-                  return res.send(error);
-                });
+              .then((users) => {
+                res.status(201);
+                return res.send(users.dataValues);
+              })
+              .catch((error) => {
+                res.status(400);
+                return res.send(error);
+              });
           })
           .catch((error) => next(error));
-
       });
     });
   } else {
@@ -68,7 +67,7 @@ server.put("/:id", (req, res, next) => {
 });
 
 server.get("/:id", (req, res, next) => {
-  User.findOne({
+  User.findById({
     where: { id: req.params.id },
     include: [Order, Reviews],
   })

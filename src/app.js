@@ -99,7 +99,7 @@ server.use(morgan("dev"));
 // server.use(googleStratergy);
 server.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin",
-             "https://vivero.vercel.app/",
+             "https://vivero.vercel.app",
 //              "http://localhost:3001"
             ); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Credentials", "true");

@@ -110,7 +110,7 @@ server.use((req, res, next) => {
 server.use("/", routes);
 
 passport.serializeUser(function (user, done) {
-  done(null, user.id);
+  done(null, user._id);
 });
 
 passport.deserializeUser(function (id, done) {
@@ -132,7 +132,7 @@ function isAuthenticated(req, res, next) {
 }
 
 server.get("/me", isAuthenticated, function (req, res) {
-  User.findById({ where: { id: req.user.id }, include: [Order] })
+  User.findById({ where: { id: req.user._id }, include: [Order] })
     .then((user) => {
       res.send(user);
     })
@@ -164,60 +164,3 @@ server.get(
 );
 
 module.exports = server;
-
-// const mercadopago = require("mercadopago");
-
-// mercadopago.configure({
-//   sandbox: true,
-//   access_token:
-//     "TEST-7291361459687504-090121-277640c872600cf5f29c4db7d737b521-250042965",
-// });
-
-// server.post("/mercadopago/create", (req, res, next) => {
-//   mercadopago.payment
-//     .create({
-//       description: "Buying a PS4",
-//       transaction_amount: 10500,
-//       payment_method_id: "rapipago",
-//       notification_url: "https://83e17486c638.ngrok.io/mercadopago",
-//       payer: {
-//         email: "ingenieriamg91@gmail.com",
-
-//         identification: {
-//           type: "DNI",
-//           number: "34123123",
-//         },
-//       },
-//     })
-//     .then(function (mpResponse) {
-//       console.log(mpResponse);
-//       res.send(mpResponse);
-//     })
-//     .catch(function (mpError) {
-//       console.log(mpError);
-//     });
-// });
-
-// // {
-// //   action: 'payment.created',
-// //   api_version: 'v1',
-// //   data: { id: '29404256' },
-// //   date_created: '2020-09-01T22:43:35Z',
-// //   id: 6362378320,
-// //   live_mode: false,
-// //   type: 'payment',
-// //   user_id: '250042965'
-// // }
-
-// server.post("/mercadopago", (req, res, next) => {
-//   res.send();
-
-//   const { data } = req.body;
-//   mercadopago.payment
-//     .get(data.id)
-//     .then((values) => console.log(values.body.payer));
-
-//   // console.log(req.headers, req.body);
-// });
-
-//mailgun

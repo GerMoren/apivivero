@@ -1,5 +1,5 @@
 const express = require("express");
-const session = require("express-session");
+const session = require("cookie-session");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
@@ -89,11 +89,11 @@ server.use(morgan("dev"));
 
 server.use(
   session({
-    store: new (require("connect-pg-simple")(session))(),
+    // store: new (require("connect-pg-simple")(session))(),
     secret: "clasificado",
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
+    cookie: { secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
   })
 );
 

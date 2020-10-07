@@ -76,11 +76,13 @@ passport.use(
 // lo más simple y pequeña posible
 
 passport.serializeUser(function (user, done) {
+  console.log("en el serialize", user);
   done(null, user.id);
 });
 
 // Al deserealizar la información del usuario va a quedar almacenada en req.user
 passport.deserializeUser(function (id, done) {
+  console.log("en el deserialize", id);
   User.findByPk(id)
     .then((user) => {
       done(null, user);

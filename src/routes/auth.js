@@ -41,19 +41,20 @@ server.get("/logout", function (req, res) {
   //   // });
   //   .send(req.user);
   // req.logout();
-  // res.cookie("connect.sid", "", { expires: new Date(1), path: "/" });
+  res.cookie("connect.sid", "", { expires: new Date(1), path: "/" });
   // req.logout();
   // // res.clearCookie("connect.sid", { path: "/" });
   // // res.redirect("/");
-  // req.session = null;
-  req.session.destroy(function (err) {
-    if (err) {
-      return next(err);
-    }
-    // The response should indicate that the user is no longer authenticated.
-    console.log(req.isAuthenticated());
-    return res.send({ authenticated: req.isAuthenticated() });
-  });
+  req.session = null;
+  // req.session.destroy(function (err) {
+  //   if (err) {
+  //     return next(err);
+  //   }
+  //   // The response should indicate that the user is no longer authenticated.
+  //   console.log(req.isAuthenticated());
+  res.clearCookie("connect.sid");
+  return res.send({ authenticated: req.isAuthenticated() });
+  // });
   // req.session.destroy((err) => {
   //   if (!err) {
   //     res
@@ -64,7 +65,6 @@ server.get("/logout", function (req, res) {
   //     res.send(err);
   //   }
   // });
-  // res.clearCookie("connect.sid");
   // res.redirect("/");
 });
 
